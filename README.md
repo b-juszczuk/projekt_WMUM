@@ -9,3 +9,10 @@ Aplikacja R Shiny przedstawia jak wygląda zbiór danych, podstawowe statystyki 
 >
 > Jeśli będziesz chciał uruchomuc aplikacje na swoim komputeże konieczna będzie zmiana ścieżki wpliku app_2.R do pliku z danymi na twoim komputerze.
 >
+
+# Bibliografia:
+
+- https://dax44.github.io/ModelsDeployment/wyk5.html,
+- https://github.com/amitvkulkarni/Interactive-Modelling-with-Shiny/tree/main,
+- https://rstudio.github.io/shinydashboard/structure.html#background-shiny-and-html,
+- https://www.kaggle.com/datasets/lsind18/euro-exchange-daily-rates-19992020
