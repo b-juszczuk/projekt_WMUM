@@ -7,11 +7,11 @@ library(ggplot2)
 library(bslib)
 library(gridlayout)
 library(datasets)
-library(skimr)
 library(rstatix)
 library(shinycssloaders)
 library(dplyr)
 library(rpart)
+library(lubridate)
 
 Dataset_clean <- read.csv("C:\\Users\\Dell\\Desktop\\studia_IAD\\Wdrazanie modeli uczenia maszynowego\\projekt_WMUM\\date.csv", header = TRUE, sep = ",", quote = '"')
 
@@ -30,11 +30,20 @@ ui <- dashboardPage(
   dashboardBody(
     tabItems(
       tabItem(tabName = "dashboard",
-              h2("Opis"),
+              tags$h2(style = "font-weight: bold;", "Opis zbioru"),
+              box(
+                "Zbiór zawiera 9230 obserwacji o kursie 12 walut w stosunku do Euro przedstawionych na przestrzeni czasu od 04.01.1999r. do 11.04.2024r.",
+                width = 12
+              ),
               box(withSpinner(DTOutput("Data")), width = 12, style = "overflow-x: scroll; height: 500px;")
       ),
       tabItem(tabName = "reports",
-              h2("Statystyki opisowe"),
+              tags$h2(style = "font-weight: bold;", "Statystyki opisowe"),
+              fluidRow(
+                column(width = 12,
+                       selectInput("selected_variables", "Wybierz zmienne:", choices = colnames(Dataset_clean)[-1], selected = colnames(Dataset_clean)[-1], multiple = TRUE, width = "100%")
+                )
+              ),
               fluidRow(
                 box(
                   DTOutput("table"),
@@ -44,7 +53,7 @@ ui <- dashboardPage(
               )
       ),
       tabItem(tabName = "analytics",
-              h2("Wizualizacje"),
+              tags$h2(style = "font-weight: bold;", "Wizualizacje"),
               fluidRow(
                 column(width = 4, selectInput("currency", "Waluta:", choices = colnames(Dataset_clean)[-1])),
                 column(width = 4, dateInput("start_date", "Data początkowa:", value = min(Dataset_clean$Data), min = min(Dataset_clean$Data), max = max(Dataset_clean$Data))),
@@ -56,7 +65,7 @@ ui <- dashboardPage(
               )
       ),
       tabItem(tabName = "settings",
-              h2("Macierz korelacji"),
+              tags$h2(style = "font-weight: bold;", "Macierz korelacji"),
               fluidRow(
                 column(width = 12,
                        box(
@@ -68,22 +77,21 @@ ui <- dashboardPage(
               )
       ),
       tabItem(tabName = "reports2",
-              h2("Predykcja"),
+              tags$h2(style = "font-weight: bold;", "Predykcja"),
               fluidRow(
-                sidebarPanel(
-                  dateInput("input_date", "Wybierz datę:", value = min(Dataset_clean$Data), min = min(Dataset_clean$Data), max = max(Dataset_clean$Data))
-                ),
-                mainPanel(
-                  box(
-                    verbatimTextOutput("prediction_output"),
-                    width = 12
-                  )
-                )
-              )
+                column(width = 3, dateInput("input_date", "Wybierz datę:", value = min(Dataset_clean$Data), min = min(Dataset_clean$Data), max = max(Dataset_clean$Data))),
+                column(width = 3, selectInput("currency_pred", "Waluta:", choices = colnames(Dataset_clean)[-1])),
+                column(width = 3, selectInput("model_type", "Model:", choices = c("Drzewo decyzyjne" = "tree", "Regresja liniowa" = "lm")))
+              ),
+              box(width = "100%",
+                  verbatimTextOutput("prediction_output")),
+              box(width = "100%",
+                  verbatimTextOutput("mae_output"))
       )
     )
   )
 )
+
 
 server <- function(input, output, session) {
   
@@ -94,8 +102,8 @@ server <- function(input, output, session) {
   
   # Renderowanie tabeli statystyk opisowych
   output$table <- renderDataTable({
-    numeric_cols <- sapply(Dataset_clean[, -1], is.numeric)
-    numeric_data <- Dataset_clean[, c(FALSE, numeric_cols)]
+    req(input$selected_variables)
+    numeric_data <- Dataset_clean[, c("Data", input$selected_variables)]
     
     stats_df <- data.frame(
       Kolumna = character(),
@@ -108,7 +116,7 @@ server <- function(input, output, session) {
       SD = numeric()
     )
     
-    for (col in names(numeric_data)) {
+    for (col in input$selected_variables) {
       stats <- summary(numeric_data[[col]])
       sd_value <- sd(numeric_data[[col]], na.rm = TRUE)
       stats_df <- rbind(stats_df, c(col, round(stats["Min."], 2), round(stats["1st Qu."], 2), round(stats["Median"], 2), round(stats["Mean"], 2), round(stats["3rd Qu."], 2), round(stats["Max."], 2), round(sd_value, 2)))
@@ -154,31 +162,69 @@ server <- function(input, output, session) {
     )
   })
   
-  # Predykcja wartości na podstawie wybranej daty
+  # Predykcja wartości na podstawie wybranej daty i modelu
   output$prediction_output <- renderPrint({
-    req(input$input_date)
+    req(input$input_date, input$currency_pred, input$model_type)
     
-    # Aktualizacja train_df i test_df na podstawie input$input_date
+    # Przekształcanie daty na liczbę dni od daty początkowej
+    Dataset_clean$Days <- as.numeric(as.Date(Dataset_clean$Data) - min(as.Date(Dataset_clean$Data)))
     input_date <- as.Date(input$input_date)
+    input_days <- as.numeric(input_date - min(as.Date(Dataset_clean$Data)))
+    
+    # Podział danych na dane treningowe i testowe
+    set.seed(2024)
     num_train_samples <- round(nrow(Dataset_clean) * .7)
-    num_test_samples <- nrow(Dataset_clean) - num_train_samples
-    
     train_df <- Dataset_clean[1:num_train_samples, ]
-    test_df <- Dataset_clean[(num_train_samples + 1):(num_train_samples + num_test_samples), ]
-    
-    train_df$Data <- as.Date(train_df$Data)
-    test_df$Data <- as.Date(test_df$Data)
-    
-    # Budowanie modelu drzewa decyzyjnego na nowych danych treningowych
-    model_tree <- rpart(Polish.zloty. ~ Data, data = train_df, method = "anova")
+    test_df <- Dataset_clean[(num_train_samples + 1):nrow(Dataset_clean), ]
     
     # Przewidywanie wartości dla nowej daty
-    new_data <- data.frame(Data = input_date)
-    prediction <- predict(model_tree, newdata = new_data)
+    new_data <- data.frame(Days = input_days)
     
-    print(paste("Przewidywana wartość Polish.zloty. dla daty", input_date, "to:", prediction))
+    if (input$model_type == "tree") {
+      # Budowanie modelu drzewa decyzyjnego
+      formula_tree <- as.formula(paste(input$currency_pred, "~ Days"))
+      model_tree <- rpart(formula_tree, data = train_df, method = "anova")
+      prediction <- predict(model_tree, newdata = new_data)
+    } else {
+      # Budowanie modelu regresji liniowej
+      formula_lm <- as.formula(paste(input$currency_pred, "~ Days"))
+      model_lm <- lm(formula_lm, data = train_df)
+      prediction <- predict(model_lm, newdata = new_data)
+    }
+    
+    print(paste("Przewidywana wartość", input$currency_pred, "dla daty", input_date, "to:", round(prediction, 2)))
   })
   
+  # Obliczanie MAE dla wybranego modelu i waluty
+  output$mae_output <- renderPrint({
+    req(input$currency_pred, input$model_type)
+    
+    # Przekształcanie daty na liczbę dni od daty początkowej
+    Dataset_clean$Days <- as.numeric(as.Date(Dataset_clean$Data) - min(as.Date(Dataset_clean$Data)))
+    
+    # Podział danych na dane treningowe i testowe
+    num_train_samples <- round(nrow(Dataset_clean) * .7)
+    train_df <- Dataset_clean[1:num_train_samples, ]
+    test_df <- Dataset_clean[(num_train_samples + 1):nrow(Dataset_clean), ]
+    
+    if (input$model_type == "tree") {
+      # Budowanie modelu drzewa decyzyjnego
+      formula_tree <- as.formula(paste(input$currency_pred, "~ Days"))
+      model_tree <- rpart(formula_tree, data = train_df, method = "anova")
+      predictions <- predict(model_tree, newdata = test_df)
+    } else {
+      # Budowanie modelu regresji liniowej
+      formula_lm <- as.formula(paste(input$currency_pred, "~ Days"))
+      model_lm <- lm(formula_lm, data = train_df)
+      predictions <- predict(model_lm, newdata = test_df)
+    }
+    
+    actuals <- test_df[[input$currency_pred]]
+    mae <- mean(abs(predictions - actuals))
+    
+    print(paste("Mean Absolute Error (MAE) dla modelu", input$model_type, "i waluty", input$currency_pred, "to:", round(mae, 2)))
+  })
 }
+
 
 shinyApp(ui, server)
