@@ -1,14 +1,19 @@
 # Wizualizacja za pomocą Shiny
 
-To repozytorium zawiera projekt na zaliczenie zajęć z "Wdrażania modeli uczenia maszynowego". Zaprezętowany dashboard powstał przy użyciu pakietu shiny w języku R.
+To repozytorium zawiera projekt na zaliczenie zajęć z "Wdrażania modeli uczenia maszynowego". Zaprezętowana aplikacja powstał przy użyciu pakietu shiny w języku R.
 
 # Wstęp
 Aplikacja R Shiny przedstawia jak wygląda zbiór danych, podstawowe statystyki zbioru, wizualizacje oraz przewidywanie przyszłego kursu wybranej waluty w stosunku do Euro.
 
+## Uruchomienie 
+Aby uruchomić aplikkacje należy pobrać plik `date.csv` zawierający zbiór danych oraz plik `app_2.R`, który zawira samą aplikację shiny. Następnie należy otworzyć plik `app_2.R` w programie RStudio i uruchomić wszystkie polecenia.
+
 > :warning: **Ostrzeżenie:**
 >
-> Jeśli będziesz chciał uruchomuc aplikacje na swoim komputeże konieczna będzie zmiana ścieżki wpliku app_2.R do pliku z danymi na twoim komputerze.
->
+> Jeśli będziesz chciał uruchomuc aplikacje na swoim komputerze konieczna będzie zmiana ścieżki w pliku app_2.R do pliku z danymi na twoim komputerze. Po uruchomieniu wszystkich poleceń aplikacja otworzy się w nowym oknie.
+
+## Opis aplikacji 
+
 
 # Bibliografia:
 
