@@ -20,7 +20,7 @@ ui <- dashboardPage(
   dashboardHeader(title = "Kursy Walut"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Opis", tabName = "dashboard", icon = icon("dashboard")),
+      menuItem("Opis", tabName = "dashboard", icon = icon("book")),
       menuItem("Statystyki opisowe", tabName = "reports", icon = icon("file")),
       menuItem("Wizualizacje", tabName = "analytics", icon = icon("chart-line")),
       menuItem("Macierz korelacji", tabName = "settings", icon = icon("exchange-alt")),
@@ -55,13 +55,29 @@ ui <- dashboardPage(
       tabItem(tabName = "analytics",
               tags$h2(style = "font-weight: bold;", "Wizualizacje"),
               fluidRow(
-                column(width = 4, selectInput("currency", "Waluta:", choices = colnames(Dataset_clean)[-1])),
-                column(width = 4, dateInput("start_date", "Data początkowa:", value = min(Dataset_clean$Data), min = min(Dataset_clean$Data), max = max(Dataset_clean$Data))),
-                column(width = 4, dateInput("end_date", "Data końcowa:", value = max(Dataset_clean$Data), min = min(Dataset_clean$Data), max = max(Dataset_clean$Data)))
-              ),
-              box(width = "100%",  
-                  title = "Wykres waluty w czasie", background = "maroon", solidHeader = TRUE,
-                  plotOutput("currencyTimePlot", width = "100%")  
+                column(width = 12, tabsetPanel(
+                  tabPanel("Wykres waluty w czasie",
+                           fluidRow(style = "margin-top: 20px;",
+                                    column(width = 4, selectInput("currency", "Waluta:", choices = colnames(Dataset_clean)[-1])),
+                                    column(width = 4, dateInput("start_date", "Data początkowa:", value = min(Dataset_clean$Data), min = min(Dataset_clean$Data), max = max(Dataset_clean$Data))),
+                                    column(width = 4, dateInput("end_date", "Data końcowa:", value = max(Dataset_clean$Data), min = min(Dataset_clean$Data), max = max(Dataset_clean$Data)))
+                           ),
+                           box(width = "100%",  
+                               title = "Wykres waluty w czasie", background = "maroon", solidHeader = TRUE,
+                               plotOutput("currencyTimePlot", width = "100%")  
+                           )
+                  ),
+                  tabPanel("Rozkład waluty",
+                           fluidRow(style = "margin-top: 20px;",
+                                    column(width = 6, selectInput("dist_currency", "Waluta:", choices = colnames(Dataset_clean)[-1])),
+                                    column(width = 6, sliderInput("bins", "Liczba przedziałów:", min = 10, max = 100, value = 30))
+                           ),
+                           box(width = "100%",
+                               title = "Histogram rozkładu waluty", background = "black", solidHeader = TRUE,
+                               plotOutput("distPlot", width = "100%")
+                           )
+                  )
+                ))
               )
       ),
       tabItem(tabName = "settings",
@@ -81,17 +97,24 @@ ui <- dashboardPage(
               fluidRow(
                 column(width = 3, dateInput("input_date", "Wybierz datę:", value = min(Dataset_clean$Data), min = min(Dataset_clean$Data), max = max(Dataset_clean$Data))),
                 column(width = 3, selectInput("currency_pred", "Waluta:", choices = colnames(Dataset_clean)[-1])),
-                column(width = 3, selectInput("model_type", "Model:", choices = c("Drzewo decyzyjne" = "tree", "Regresja liniowa" = "lm")))
+                column(width = 3, selectInput("model_type", "Model:", choices = c("Regresja liniowa" = "lm", "Drzewo decyzyjne" = "tree")))
               ),
               box(width = "100%",
-                  verbatimTextOutput("prediction_output")),
+                  title = "Prognoza",
+                  status = "success",
+                  solidHeader = TRUE,
+                  textOutput("prediction_output")
+              ),
               box(width = "100%",
-                  verbatimTextOutput("mae_output"))
+                  title = "Mean Absolute Error (MAE)",
+                  status = "primary",
+                  solidHeader = TRUE,
+                  textOutput("mae_output")
+              )
       )
     )
   )
 )
-
 
 server <- function(input, output, session) {
   
@@ -163,7 +186,7 @@ server <- function(input, output, session) {
   })
   
   # Predykcja wartości na podstawie wybranej daty i modelu
-  output$prediction_output <- renderPrint({
+  output$prediction_output <- renderText({
     req(input$input_date, input$currency_pred, input$model_type)
     
     # Przekształcanie daty na liczbę dni od daty początkowej
@@ -171,60 +194,68 @@ server <- function(input, output, session) {
     input_date <- as.Date(input$input_date)
     input_days <- as.numeric(input_date - min(as.Date(Dataset_clean$Data)))
     
-    # Podział danych na dane treningowe i testowe
-    set.seed(2024)
-    num_train_samples <- round(nrow(Dataset_clean) * .7)
-    train_df <- Dataset_clean[1:num_train_samples, ]
-    test_df <- Dataset_clean[(num_train_samples + 1):nrow(Dataset_clean), ]
+    # Tworzenie formuły dla wybranego modelu
+    formula <- as.formula(paste(input$currency_pred, "~ Days"))
     
-    # Przewidywanie wartości dla nowej daty
-    new_data <- data.frame(Days = input_days)
-    
+    # Tworzenie i trenowanie modelu
     if (input$model_type == "tree") {
-      # Budowanie modelu drzewa decyzyjnego
-      formula_tree <- as.formula(paste(input$currency_pred, "~ Days"))
-      model_tree <- rpart(formula_tree, data = train_df, method = "anova")
-      prediction <- predict(model_tree, newdata = new_data)
-    } else {
-      # Budowanie modelu regresji liniowej
-      formula_lm <- as.formula(paste(input$currency_pred, "~ Days"))
-      model_lm <- lm(formula_lm, data = train_df)
-      prediction <- predict(model_lm, newdata = new_data)
+      model <- rpart(formula, data = Dataset_clean)
+    } else if (input$model_type == "lm") {
+      model <- lm(formula, data = Dataset_clean)
     }
     
-    print(paste("Przewidywana wartość", input$currency_pred, "dla daty", input_date, "to:", round(prediction, 2)))
+    # Prognoza wartości
+    predicted_value <- predict(model, data.frame(Days = input_days))
+    
+    # Zwracanie prognozowanej wartości
+    if (length(predicted_value) > 0) {
+      paste("Prognozowana wartość dla ", input$currency_pred, " na dzień ", input$input_date, " to : ", round(predicted_value, 4))
+    } else {
+      "Brak wystarczających danych do przeprowadzenia predykcji."
+    }
   })
   
-  # Obliczanie MAE dla wybranego modelu i waluty
-  output$mae_output <- renderPrint({
-    req(input$currency_pred, input$model_type)
+  # Obliczanie MAE dla modelu
+  output$mae_output <- renderText({
+    req(input$input_date, input$currency_pred, input$model_type)
     
     # Przekształcanie daty na liczbę dni od daty początkowej
     Dataset_clean$Days <- as.numeric(as.Date(Dataset_clean$Data) - min(as.Date(Dataset_clean$Data)))
     
-    # Podział danych na dane treningowe i testowe
-    num_train_samples <- round(nrow(Dataset_clean) * .7)
-    train_df <- Dataset_clean[1:num_train_samples, ]
-    test_df <- Dataset_clean[(num_train_samples + 1):nrow(Dataset_clean), ]
+    # Tworzenie formuły dla wybranego modelu
+    formula <- as.formula(paste(input$currency_pred, "~ Days"))
     
+    # Tworzenie i trenowanie modelu
     if (input$model_type == "tree") {
-      # Budowanie modelu drzewa decyzyjnego
-      formula_tree <- as.formula(paste(input$currency_pred, "~ Days"))
-      model_tree <- rpart(formula_tree, data = train_df, method = "anova")
-      predictions <- predict(model_tree, newdata = test_df)
-    } else {
-      # Budowanie modelu regresji liniowej
-      formula_lm <- as.formula(paste(input$currency_pred, "~ Days"))
-      model_lm <- lm(formula_lm, data = train_df)
-      predictions <- predict(model_lm, newdata = test_df)
+      model <- rpart(formula, data = Dataset_clean)
+      model_name <- "Drzewo decyzyjne"
+    } else if (input$model_type == "lm") {
+      model <- lm(formula, data = Dataset_clean)
+      model_name <- "Regresja liniowa"
     }
     
-    actuals <- test_df[[input$currency_pred]]
-    mae <- mean(abs(predictions - actuals))
+    # Prognoza wartości dla wszystkich dni w zbiorze danych
+    predicted_values <- predict(model, Dataset_clean)
     
-    print(paste("Mean Absolute Error (MAE) dla modelu", input$model_type, "i waluty", input$currency_pred, "to:", round(mae, 2)))
+    # Obliczanie MAE
+    actual_values <- Dataset_clean[[input$currency_pred]]
+    mae <- mean(abs(predicted_values - actual_values), na.rm = TRUE)
+    
+    if (!is.na(mae)) {
+      paste("Mean Absolute Error (MAE) dla modelu ", model_name, " to : ", round(mae, 4))
+    } else {
+      "Brak wystarczających danych do obliczenia MAE."
+    }
+  })
+  
+  # Rozkład waluty
+  output$distPlot <- renderPlot({
+    req(input$dist_currency, input$bins)
+    
+    ggplot(Dataset_clean, aes_string(input$dist_currency)) +
+      geom_histogram(bins = input$bins, fill = "blue", color = "black") +
+      labs(x = input$dist_currency, y = "Częstotliwość")
   })
 }
-
 
 shinyApp(ui, server)
