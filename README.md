@@ -17,7 +17,7 @@ Pierwsza zakładka zawiera krótki opis zbioru oraz przedstawia tabelę z danymi
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/6d5388a8-969d-4f2a-95a7-0a11528a1d80)
 
-Druga zakładka zawiera podstawowe statystyki opisowe dla wybranych walut. System automatycznie uwzględnia wszystkie dostępne waluty. Dodatkowo, użytkownicy mają możliwość zarządzania tymi walutami poprzez ich dodawanie i usuwanie według własnych preferencji.
+Druga zakładka zawiera podstawowe statystyki opisowe walut. System automatycznie uwzględnia wszystkie dostępne waluty. Dodatkowo, użytkownicy mają możliwość zarządzania tymi walutami poprzez ich dodawanie i usuwanie według własnych preferencji.
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/2c4c0694-4820-49a1-9fb1-a93bda435bc2)
 
