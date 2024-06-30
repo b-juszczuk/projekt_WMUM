@@ -3,7 +3,7 @@
 To repozytorium zawiera projekt na zaliczenie zajęć z "Wdrażania modeli uczenia maszynowego". Zaprezętowana aplikacja powstał przy użyciu pakietu shiny w języku R.
 
 # Wstęp
-Aplikacja R Shiny przedstawia jak wygląda zbiór danych, podstawowe statystyki zbioru, wizualizacje oraz przewidywanie przyszłego kursu wybranej waluty w stosunku do Euro.
+Aplikacja R Shiny przedstawia jak wygląda zbiór danych, podstawowe statystyki zbioru, interaktywne wizualizacje oraz przewidywanie przyszłego kursu wybranej waluty w stosunku do Euro.
 
 ## Uruchomienie 
 Aby uruchomić aplikacje należy pobrać plik `date.csv` zawierający zbiór danych oraz plik `app_2.R`, który zawiera samą aplikację shiny. Następnie należy otworzyć plik `app_2.R` w programie RStudio i uruchomić wszystkie polecenia.
@@ -17,7 +17,7 @@ Pierwsza zakładka zawiera krótki opis zbioru oraz przedstawia tabelę z danymi
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/6d5388a8-969d-4f2a-95a7-0a11528a1d80)
 
-Druga zakładka zawiera podstawowe statystyki opisowe dla wybranych walut.
+Druga zakładka zawiera podstawowe statystyki opisowe dla wybranych walut. System automatycznie uwzględnia wszystkie dostępne waluty. Dodatkowo, użytkownicy mają możliwość zarządzania tymi walutami poprzez ich dodawanie i usuwanie według własnych preferencji.
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/2c4c0694-4820-49a1-9fb1-a93bda435bc2)
 
