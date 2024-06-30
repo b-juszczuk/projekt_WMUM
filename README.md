@@ -21,7 +21,7 @@ Druga zakładka zawiera podstawowe statystyki opisowe walut. System automatyczni
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/2c4c0694-4820-49a1-9fb1-a93bda435bc2)
 
-Trzecia zakładka 'Wizualizacje' prezentuje dynamiczne narzędzia do analizy danych dotyczących kursów walut. Umożliwia generowanie wykresu przedstawiającego zmiany kursu wybranej waluty w określonym okresie czasu oraz analizę rozkładu wartości wybranej waluty.
+Trzecia zakładka `Wizualizacje` prezentuje dynamiczne narzędzia do analizy danych dotyczących kursów walut. Umożliwia generowanie wykresu przedstawiającego zmiany kursu wybranej waluty w określonym okresie czasu oraz analizę rozkładu wartości wybranej waluty.
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/f73b5628-777b-462b-b907-f45a88f77457)
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/e828290a-9f34-4eea-944c-0034bfda3334)
