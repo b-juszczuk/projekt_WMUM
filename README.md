@@ -13,6 +13,20 @@ Aby uruchomić aplikkacje należy pobrać plik `date.csv` zawierający zbiór da
 > Jeśli będziesz chciał uruchomuc aplikacje na swoim komputerze konieczna będzie zmiana ścieżki w pliku app_2.R do pliku z danymi na twoim komputerze. Po uruchomieniu wszystkich poleceń aplikacja otworzy się w nowym oknie.
 
 ## Opis aplikacji 
+Pierwsza zakładka zawiera krótki opis zbioru oraz przedstawia tabelę z danymi.
+![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/6d5388a8-969d-4f2a-95a7-0a11528a1d80)
+
+Druga zakłądka zawiera podstawowe statystyki opisowe dla wybranych walut.
+![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/2c4c0694-4820-49a1-9fb1-a93bda435bc2)
+
+Trzecia zakładka 'Wizualizacje' prezentuje dynamiczne narzędzia do analizy danych dotyczących kursów walut. Umożliwia generowanie wykresu przedstawiającego zmiany kursu wybranej waluty w określonym okresie czasu oraz analizę rozkładu wartości wybranej waluty.
+![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/f73b5628-777b-462b-b907-f45a88f77457)
+![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/e828290a-9f34-4eea-944c-0034bfda3334)
+
+Czwarta zakładka zawiera macierz korelacji dla wszystkich walut ze zbioru.
+![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/5d3c989c-887a-44f4-bf54-59c4bdb54c96)
+
+W ostatniej zakładce użytkownik ma możliwość wyboru daty oraz waluty, którą chce przeanalizować. Dodatkowo, można wybrać preferowany model predykcyjny, który automatycznie dokonuje prognozy ceny tej waluty na określony dzień.
 
 
 # Bibliografia:
