@@ -32,7 +32,8 @@ ui <- dashboardPage(
       tabItem(tabName = "dashboard",
               tags$h2(style = "font-weight: bold;", "Opis zbioru"),
               box(
-                "Zbiór zawiera 9230 obserwacji o kursie 12 walut w stosunku do Euro przedstawionych na przestrzeni czasu od 04.01.1999r. do 11.04.2024r.",
+                "Zbiór zawiera 9230 obserwacji o kursie 12 walut w stosunku do Euro przedstawionych na przestrzeni czasu od 04.01.1999r. do 11.04.2024r. 
+                 Dane pochodzą z European Central Bank Statistical Data WareHouse, EXR - Exchange Rates i zostały zebrane w celu analizy zmian kursów walutowych w czasie.",
                 width = 12
               ),
               box(withSpinner(DTOutput("Data")), width = 12, style = "overflow-x: scroll; height: 500px;")
