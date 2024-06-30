@@ -1,6 +1,6 @@
 # Wizualizacja za pomocą Shiny
 
-To repozytorium zawiera projekt na zaliczenie zajęć z "Wdrażania modeli uczenia maszynowego". Zaprezętowana aplikacja powstał przy użyciu pakietu shiny w języku R.
+To repozytorium zawiera projekt na zaliczenie zajęć z "Wdrażania modeli uczenia maszynowego". Zaprezentowana aplikacja powstał przy użyciu pakietu shiny w języku R.
 
 # Wstęp
 Aplikacja R Shiny przedstawia jak wygląda zbiór danych, podstawowe statystyki zbioru, interaktywne wizualizacje oraz przewidywanie przyszłego kursu wybranej waluty w stosunku do Euro.
@@ -10,14 +10,14 @@ Aby uruchomić aplikacje należy pobrać plik `date.csv` zawierający zbiór dan
 
 > :warning: **Ostrzeżenie:**
 >
-> Jeśli będziesz chciał uruchomuc aplikacje na swoim komputerze konieczna będzie zmiana ścieżki w pliku app_2.R do pliku z danymi na twoim komputerze. Po uruchomieniu wszystkich poleceń aplikacja otworzy się w nowym oknie.
+> Jeśli będziesz chciał uruchomić aplikacje na swoim komputerze konieczna będzie zmiana ścieżki w pliku app_2.R do pliku z danymi na twoim komputerze. Po uruchomieniu wszystkich poleceń aplikacja otworzy się w nowym oknie.
 
 ## Opis aplikacji 
 Pierwsza zakładka zawiera krótki opis zbioru oraz przedstawia tabelę z danymi.
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/6d5388a8-969d-4f2a-95a7-0a11528a1d80)
 
-Druga zakładka zawiera podstawowe statystyki opisowe walut. System automatycznie uwzględnia wszystkie dostępne waluty. Dodatkowo, użytkownicy mają możliwość zarządzania tymi walutami poprzez ich dodawanie i usuwanie według własnych preferencji.
+Druga zakładka zawiera podstawowe statystyki opisowe walut. System automatycznie uwzględnia wszystkie dostępne waluty. Dodatkowo, użytkownicy mają możliwość zarządzania tymi walutami poprzez ich usówanie i dodawanie według własnych preferencji. Aby usunąć wybraną walutę, wystarczy kliknąć na nią i użyć klawisza 'backspace'. Usunięte waluty zostaną automatycznie przeniesione do listy dostępnych opcji, która jest dostępna poprzez kliknięcie w pole wyboru walut. Stąd możesz ponownie wybrać dowolną z nich, aby ją przywrócić.
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/2c4c0694-4820-49a1-9fb1-a93bda435bc2)
 
