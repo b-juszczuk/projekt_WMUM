@@ -10,14 +10,14 @@ Aby uruchomić aplikacje należy pobrać plik `date.csv` zawierający zbiór dan
 
 > :warning: **Ostrzeżenie:**
 >
-> Jeśli będziesz chciał uruchomić aplikacje na swoim komputerze konieczna będzie zmiana ścieżki w pliku app_2.R do pliku z danymi na twoim komputerze. Po uruchomieniu wszystkich poleceń aplikacja otworzy się w nowym oknie.
+> Po uruchomieniu wszystkich poleceń aplikacja otworzy się w nowym oknie. Jeśli wykresy nie załadują się natychmiast, proszę o chwilę cierpliwości; aplikacja może potrzebować czasu na pełne załadowanie danych lub przetworzenie informacji.
 
 ## Opis aplikacji 
-Pierwsza zakładka zawiera krótki opis zbioru oraz przedstawia tabelę z danymi.
+Pierwsza zakładka zawiera krótki opis zbioru oraz przedstawia tabelę z danymi. W prawym górnym rogu znajduje się wyszukiwarka, za pomocą której możemy przeszukiwać dane we wszystkich kolumnach.
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/6d5388a8-969d-4f2a-95a7-0a11528a1d80)
 
-Druga zakładka zawiera podstawowe statystyki opisowe walut. System automatycznie uwzględnia wszystkie dostępne waluty. Dodatkowo, użytkownicy mają możliwość zarządzania tymi walutami poprzez ich usówanie i dodawanie według własnych preferencji. Aby usunąć wybraną walutę, wystarczy kliknąć na nią i użyć klawisza 'backspace'. Usunięte waluty zostaną automatycznie przeniesione do listy dostępnych opcji, która jest dostępna poprzez kliknięcie w pole wyboru walut. Stąd możesz ponownie wybrać dowolną z nich, aby ją przywrócić.
+Druga zakładka zawiera podstawowe statystyki opisowe walut. System automatycznie uwzględnia wszystkie dostępne waluty. Użytkownicy mają również możliwość zarządzania walutami poprzez ich dodawanie i usuwanie według własnych preferencji. Aby usunąć wybraną walutę, wystarczy kliknąć na nią i użyć klawisza 'backspace'. Usunięte waluty zostaną automatycznie przeniesione do listy opcji, którą można znaleźć po kliknięciu w pole wyboru walut. Z tej listy można ponownie wybrać dowolną walutę, aby ją przywrócić.
 
 ![image](https://github.com/b-juszczuk/projekt_WMUM/assets/115696513/2c4c0694-4820-49a1-9fb1-a93bda435bc2)
 
