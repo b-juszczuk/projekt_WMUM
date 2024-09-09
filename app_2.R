@@ -5,7 +5,6 @@ library(plotly)
 library(corrplot)
 library(ggplot2)
 library(bslib)
-library(gridlayout)
 library(datasets)
 library(rstatix)
 library(shinycssloaders)
@@ -13,7 +12,7 @@ library(dplyr)
 library(rpart)
 library(lubridate)
 
-Dataset_clean <- read.csv("C:\\Users\\Dell\\Desktop\\studia_IAD\\Wdrazanie modeli uczenia maszynowego\\projekt_WMUM\\date.csv", header = TRUE, sep = ",", quote = '"')
+Dataset_clean <- read.csv("date.csv", header = TRUE, sep = ",", quote = '"')
 
 ui <- dashboardPage(
   skin = "purple",
